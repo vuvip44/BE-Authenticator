@@ -1,0 +1,50 @@
+# .NET Core/ASP.NET Core
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.vs/
+*.DotSettings
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+build/
+
+# Packages
+packages/
+*.nupkg
+
+# Logs and databases
+*.log
+*.sqlite
+*.db
+*.mdf
+*.ldf
+
+# Runtime data
+logs/
+pids/
+*.pid
+*.seed
+
+# Secrets and sensitive data
+# appsettings.Development.json
+# secrets.json
+*.env
+
+# Test and coverage
+TestResults/
+coverage/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Node.js (if applicable)
+node_modules/
+npm-debug.log

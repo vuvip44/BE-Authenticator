@@ -79,11 +79,13 @@ namespace Login.api.Controller
                 return BadRequest(new ApiResponse<string>(400, error));
             }
 
+
             var user = await _userService.RegisterAsync(dto);
 
             return Ok(new ApiResponse<UserResDto>(200, user, "Register successfully."));
         }
 
+        [Authorize]
         [HttpPost("logout")]
         public IActionResult Logout()
         {

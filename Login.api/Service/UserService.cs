@@ -16,15 +16,20 @@ namespace Login.api.Service
         private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
         private readonly IConfiguration _config;
-
+        private readonly IStudentRepository _studenRepo;
+        private readonly ITeacherRepository _teacherRepo;
         private readonly IRoleRepository _roleRepository;
+        private readonly IStudentTeacherRepository _studentTeacherRepo;
 
-        public UserService(IUserRepository userRepository, ITokenService tokenService, IConfiguration configuration, IRoleRepository roleRepository)
+        public UserService(IUserRepository userRepository, ITokenService tokenService, IConfiguration configuration, IRoleRepository roleRepository, IStudentRepository studentRepo, ITeacherRepository teacherRepo, IStudentTeacherRepository studentTeacherRepo)
         {
             _userRepository = userRepository;
             _tokenService = tokenService;
             _config = configuration;
             _roleRepository = roleRepository;
+            _studenRepo = studentRepo;
+            _teacherRepo = teacherRepo;
+            _studentTeacherRepo = studentTeacherRepo;
         }
 
         public async Task<(string accessToken, string refreshToken, UserResDto userRes)> LoginAsync(UserLoginDto dto)
@@ -51,6 +56,7 @@ namespace Login.api.Service
                 Id = user.Id,
                 Username = user.Username,
                 Role = user.Role.Name,
+                FullName = user.FullName
             });
         }
 
@@ -109,28 +115,85 @@ namespace Login.api.Service
             {
                 throw new AppException("Username already exists.");
             }
-            var userRole = await _roleRepository.GetByNameAsync("USER");
-            if (userRole == null)
+
+
+            Role? role = null;
+
+            if (dto.Role == "student")
             {
-                throw new AppException("Role 'User' not found in system.");
+                role = await _roleRepository.GetByNameAsync("STUDENT");
+                if (role == null)
+                {
+                    throw new AppException("Role 'Student' not found");
+                }
+            }
+            else if (dto.Role == "teacher")
+            {
+                role = await _roleRepository.GetByNameAsync("TEACHER");
+                if (role == null)
+                {
+                    throw new AppException("Role 'Teacher' not found");
+                }
+            }
+            else
+            {
+                throw new AppException("Must select either Student or Teacher.");
+            }
+            if (role == null)
+            {
+                throw new AppException("Role not found.");
             }
 
             var user = new User
             {
                 Username = dto.Username,
                 Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-                RoleId = userRole.Id
-
+                RoleId = role.Id,
+                FullName = dto.FullName
             };
 
 
             await _userRepository.AddAsync(user);
             await _userRepository.SaveChangesAsync();
+
+            if (dto.Role == "student")
+            {
+                var student = new Student { UserId = user.Id };
+                await _studenRepo.AddAsync(student);
+                await _userRepository.SaveChangesAsync();
+                if (!string.IsNullOrEmpty(dto.TeacherId))
+                {
+                    int teacherId = int.Parse(dto.TeacherId); // Chuyển TeacherId thành kiểu int
+                    var teacher = await _teacherRepo.GetByIdAsync(teacherId); // Kiểm tra TeacherId hợp lệ
+                    if (teacher == null)
+                    {
+                        throw new AppException("Teacher not found.");
+                    }
+
+                    var rel = new StudentTeacher
+                    {
+                        StudentId = student.Id,
+                        TeacherId = teacherId
+                    };
+                    await _studentTeacherRepo.AddAsync(rel);
+                    await _studentTeacherRepo.SaveChangesAsync();
+                }
+            }
+            else if (dto.Role == "teacher")
+            {
+                var teacher = new Teacher { UserId = user.Id };
+                await _teacherRepo.AddAsync(teacher);
+                await _userRepository.SaveChangesAsync();
+            }
+
+
+
             var userDto = new UserResDto()
             {
                 Id = user.Id,
                 Username = user.Username,
                 Role = user.Role.Name,
+                FullName = user.FullName
             };
 
             return userDto;
@@ -148,6 +211,7 @@ namespace Login.api.Service
                 Id = user.Id,
                 Username = user.Username,
                 Role = user.Role.Name,
+                FullName = user.FullName
             };
             return userDto;
         }

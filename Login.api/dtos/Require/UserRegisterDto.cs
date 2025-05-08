@@ -10,6 +10,10 @@ namespace Login.api.dtos.Require
     {
         [Required]
         [StringLength(50, MinimumLength = 3)]
+        public string FullName { get; set; }
+
+        [Required]
+        [StringLength(50, MinimumLength = 3)]
         public string Username { get; set; }
 
         [Required]
@@ -19,5 +23,8 @@ namespace Login.api.dtos.Require
         [Required(ErrorMessage = "ConfirmPassword is required")]
         [Compare("Password", ErrorMessage = "Passwords do not match")]
         public string ConfirmPassword { get; set; }
+
+        public string Role { get; set; }  // "student" or "teacher"
+        public string TeacherId { get; set; }
     }
 }

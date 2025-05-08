@@ -26,7 +26,8 @@ namespace Login.api.Service
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Email, user.Username),
+                new Claim(ClaimTypes.Name,user.FullName),
                 new Claim(ClaimTypes.Role, user.Role?.Name??"USER")
             };
 

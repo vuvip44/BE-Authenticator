@@ -5,14 +5,12 @@ using System.Threading.Tasks;
 
 namespace Login.api.dtos.Response
 {
-    public class UserResDto
+    public class StudentResDto
     {
         public int Id { get; set; }
 
-        public string Username { get; set; }
-
         public string FullName { get; set; }
 
-        public string Role { get; set; }
     }
+
 }

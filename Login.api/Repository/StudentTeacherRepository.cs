@@ -17,6 +17,15 @@ namespace Login.api.Repository
             _context = context;
         }
 
+        public async Task<Student?> GetDetailStudentOfTeacher(int teacherId, int studentId)
+        {
+            var student = await _context.StudentTeachers
+                    .Include(st => st.Student)
+                    .ThenInclude(s => s.User)
+                    .FirstOrDefaultAsync(st => st.TeacherId == teacherId && st.StudentId == studentId);
+            return student?.Student;
+        }
+
         public async Task<List<Student>> GetStudentsByTeacher(int teacherId)
         {
             return await _context.StudentTeachers

@@ -14,6 +14,6 @@ namespace Login.api.Repository.IRepository
 
         Task<IEnumerable<Teacher>> GetAllTeacherAsync();
 
-
+        Task<bool> isExist(int id);
     }
 }

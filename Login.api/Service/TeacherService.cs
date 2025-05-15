@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Login.api.dtos.Response;
+using Login.api.models;
 using Login.api.Repository.IRepository;
 using Login.api.Service.IService;
 
@@ -25,6 +26,16 @@ namespace Login.api.Service
                 Id = t.Id,
                 FullName = t.User.FullName
             }).ToList();
+        }
+
+        public async Task<Teacher> getTeacherByUserIdAsync(int userId)
+        {
+            var teacher = await _teacherRepository.GetByUserIdAsync(userId);
+            if (teacher == null)
+            {
+                return null;
+            }
+            return teacher;
         }
     }
 }

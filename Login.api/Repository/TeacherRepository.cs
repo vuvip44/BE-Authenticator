@@ -33,5 +33,10 @@ namespace Login.api.Repository
         {
             return await _context.Teachers.Include(t => t.User).FirstOrDefaultAsync(t => t.UserId == userId);
         }
+
+        public async Task<bool> isExist(int id)
+        {
+            return await _context.Teachers.AnyAsync(x => x.Id == id);
+        }
     }
 }

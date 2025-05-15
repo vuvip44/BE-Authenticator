@@ -11,5 +11,6 @@ namespace Login.api.Service.IService
     {
 
         Task<List<TeacherResDto>> getAllTeachersAsync();
+        Task<Teacher> getTeacherByUserIdAsync(int userId);
     }
 }

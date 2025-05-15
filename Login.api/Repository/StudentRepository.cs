@@ -17,12 +17,25 @@ namespace Login.api.Repository
             _context = context;
         }
 
+        public async Task<IEnumerable<Student>> GetAllStudents()
+        {
+            return await _context.Students.Include(s => s.User).ToListAsync();
+        }
+
         public async Task<Student?> GetByUserIdAsync(int usedId)
         {
             return await _context.Students
                 .Include(s => s.StudentTeachers)
+                .Include(s => s.User)
                 .FirstOrDefaultAsync(s => s.UserId == usedId);
         }
+
+
+        public async Task<Student> GetStudentByUsername(string username)
+        {
+            return await _context.Students.Include(s => s.User).FirstOrDefaultAsync(s => s.User.Username == username);
+        }
+
 
         public async Task<List<Student>> GetStudentsByTeacherIdAsync(int teacherId)
         {
@@ -31,6 +44,11 @@ namespace Login.api.Repository
                 .Select(st => st.Student)
                 .Include(s => s.User)
                 .ToListAsync();
+        }
+
+        public async Task<bool> IsExist(int id)
+        {
+            return await _context.Students.AnyAsync(x => x.Id == id);
         }
     }
 }

@@ -10,6 +10,9 @@ namespace Login.api.Repository.IRepository
     {
         Task<Student?> GetByUserIdAsync(int usedId);
 
+        Task<bool> IsExist(int id);
+        Task<IEnumerable<Student>> GetAllStudents();
+        Task<Student> GetStudentByUsername(string username);
 
     }
 }

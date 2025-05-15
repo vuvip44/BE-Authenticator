@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Login.api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20250508070152_FixCascadeDelete")]
-    partial class FixCascadeDelete
+    [Migration("20250514083809_UpdateStudent")]
+    partial class UpdateStudent
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,8 +49,24 @@ namespace Login.api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<float>("DiemCC")
+                        .HasColumnType("real");
+
+                    b.Property<float>("DiemCuoiKy")
+                        .HasColumnType("real");
+
+                    b.Property<float>("DiemGiuaKy")
+                        .HasColumnType("real");
+
+                    b.Property<float>("DiemTongKet")
+                        .HasColumnType("real");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
+
+                    b.Property<string>("XepLoai")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

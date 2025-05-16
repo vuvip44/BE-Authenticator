@@ -11,5 +11,6 @@ namespace Login.api.Service
     {
         Task<List<StudentResDto>> GetStudentsByTeacherId(int teacherId);
         Task<bool> UpdateStudentScore(int teacherId, int studentId, StudentUpdateScores dto);
+        Task<bool> DeleteStudentByTeacher(int teacherId, int studentId);
     }
 }

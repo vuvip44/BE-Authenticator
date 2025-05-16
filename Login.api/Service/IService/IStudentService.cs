@@ -16,5 +16,7 @@ namespace Login.api.Service.IService
 
         Task<StudentResDto> GetStudentByUsername(string name);
         Task<bool> UpdateStudent(int userId, StudentUpdate dto);
+        Task<List<StudentStatisticDto>> GetStudentStatisticsAsync();
+
     }
 }

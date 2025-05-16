@@ -20,11 +20,13 @@ namespace Login.api.Controller
     {
         private readonly ITeacherService _teacherService;
         private readonly IStudentTeacherService _studentTeacherService;
+        private readonly IStudentService _studentService;
 
-        public TeacherController(ITeacherService teacherService, IStudentTeacherService studentTeacherService)
+        public TeacherController(ITeacherService teacherService, IStudentTeacherService studentTeacherService, IStudentService studentService)
         {
             _teacherService = teacherService;
             _studentTeacherService = studentTeacherService;
+            _studentService = studentService;
         }
 
         [HttpGet]
@@ -96,6 +98,32 @@ namespace Login.api.Controller
                 return BadRequest(new ApiResponse<string>(400, "Lỗi không cập nhật được"));
             }
             return Ok(new ApiResponse<string>(200, "Cập nhật thành công"));
+        }
+
+        [HttpDelete("delete-student/{studentId}")]
+        [Authorize(Roles = "TEACHER")]
+        public async Task<IActionResult> DeleteStudent(int studentId)
+        {
+
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var teacher = await _teacherService.getTeacherByUserIdAsync(userId);
+            if (teacher == null)
+                return Forbid("Không tìm thấy giáo viên tương ứng");
+            var result = await _studentTeacherService.DeleteStudentByTeacher(teacher.Id, studentId);
+            if (!result)
+            {
+                return BadRequest(new ApiResponse<string>(400, "Không thể xóa học sinh hoặc bạn không có quyền."));
+            }
+
+            return Ok(new ApiResponse<string>(200, "Xóa học sinh thành công."));
+        }
+
+        [HttpGet("statistics")]
+        [Authorize(Roles = "TEACHER")]
+        public async Task<IActionResult> GetStudentStatistics()
+        {
+            var result = await _studentService.GetStudentStatisticsAsync();
+            return Ok(new ApiResponse<List<StudentStatisticDto>>(200, result));
         }
 
     }

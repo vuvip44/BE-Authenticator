@@ -36,5 +36,9 @@ namespace Login.api.Repository
                 .ToListAsync();
         }
 
+        public async Task<StudentTeacher> GetStudentTeacherRelationAsync(int teacherId, int studentId)
+        {
+            return await _context.StudentTeachers.FirstOrDefaultAsync(st => st.TeacherId == teacherId && st.StudentId == studentId);
+        }
     }
 }

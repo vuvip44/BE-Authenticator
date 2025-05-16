@@ -85,5 +85,11 @@ namespace Login.api.Service
             return true;
 
         }
+
+        public async Task<List<StudentStatisticDto>> GetStudentStatisticsAsync()
+        {
+            return await _studentRepo.GetStudentStatisticsAsync();
+        }
+
     }
 }

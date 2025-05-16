@@ -10,5 +10,6 @@ namespace Login.api.Repository.IRepository
     {
         Task<List<Student>> GetStudentsByTeacher(int teacher);
         Task<Student?> GetDetailStudentOfTeacher(int teacherId, int studentId);
+        Task<StudentTeacher> GetStudentTeacherRelationAsync(int teacherId, int studentId);
     }
 }
